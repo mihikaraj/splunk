@@ -1,0 +1,35 @@
+<dashboard>
+  <label>PAG Status Dashboard Industry</label>
+  <row>
+    <panel>
+      <single>
+        <title>PAG Status</title>
+        <search>
+          <query>index="npp_industry"  sourcetype=npp_swift_pag_getstatus | rex "^(?&lt;var1&gt;\S+)\s(?&lt;var2&gt;\S+)\s+(?&lt;var3&gt;\S+)\s+(?&lt;var4&gt;\S+)\s+(?&lt;var5&gt;\S+)\s+(?&lt;var6&gt;\S+)\s+(?&lt;var7&gt;\S+)\s+(?&lt;var8&gt;\S+)\s+(?&lt;var9&gt;\S+)\s+(?&lt;Env&gt;\S+)\s+(?&lt;var11&gt;\S+)\s+(?&lt;ID&gt;\S+)\s+(?&lt;var13&gt;\S+)\s+(?&lt;Site&gt;\S+)\s+(?&lt;var15&gt;\S+)\s+(?&lt;Status&gt;\S+)" | eval Status=if(Status=="GRACEFULLY_STOPPED", "STOPPED",Status) | stats count by Status | where Status = "STOPPED" | fillnull value=4 count | rangemap field=count low=0-0 elevated=1-2 severe=3-4 default=low | eval Status=case(count== 0, "OK", count==1, "Not OK", count==2, "Alert", count &gt; 2, "Down")</query>
+          <earliest>rt-5m</earliest>
+          <latest>rt</latest>
+          <refresh>5m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorMode">block</option>
+        <option name="useColors">0</option>
+        <option name="underLabel">Compared to 1m ago</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>PAG Status</title>
+        <search>
+          <query>index="npp_industry"  sourcetype=npp_swift_pag_getstatus | rex "^(?&lt;var1&gt;\S+)\s(?&lt;var2&gt;\S+)\s+(?&lt;var3&gt;\S+)\s+(?&lt;var4&gt;\S+)\s+(?&lt;var5&gt;\S+)\s+(?&lt;var6&gt;\S+)\s+(?&lt;var7&gt;\S+)\s+(?&lt;var8&gt;\S+)\s+(?&lt;var9&gt;\S+)\s+(?&lt;Env&gt;\S+)\s+(?&lt;var11&gt;\S+)\s+(?&lt;ID&gt;\S+)\s+(?&lt;var13&gt;\S+)\s+(?&lt;Site&gt;\S+)\s+(?&lt;var15&gt;\S+)\s+(?&lt;Status&gt;\S+)" | eval Status=if(Status=="GRACEFULLY_STOPPED", "STOPPED",Status) | stats count by Status | where Status = "STOPPED" | fillnull value=4 count | rangemap field=count low=0-0 elevated=1-2 severe=3-4 default=low |eval Status=case(count== 0, "OK", count==1, "Warning", count==2, "Alert", count &gt; 2, "Down")</query>
+          <earliest>rt-5m</earliest>
+          <latest>rt</latest>
+          <refresh>5m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="colorMode">block</option>
+        <option name="useColors">0</option>
+        <option name="underLabel">Compared to 1m ago</option>
+      </single>
+    </panel>
+  </row>
+</dashboard>
